@@ -1,0 +1,95 @@
+#!/bin/bash
+
+# Function to display menu
+display_menu() {
+    echo "Choose an option:"
+    echo "1) Import data"
+    echo "2) View passenger details"
+    echo "3) Update passenger details"
+    echo "4) Display all records"
+    echo "5) Exit"
+    read -p "Enter your choice: " CHOICE
+}
+
+# Function to import data
+import_data() {
+    read -p "Enter file path (leave blank for manual input): " FILE_PATH
+    if [[ -z "$FILE_PATH" ]]; then
+        echo "Enter passenger data (code,fullname,age,country,status,rescued):"
+        while read -p "Enter data or type 'end' to stop: " DATA; do
+            if [[ "$DATA" == "end" ]]; then
+                break
+            fi
+            echo "$DATA" >> passengers.csv
+        done
+    else
+        cp "$FILE_PATH" passengers.csv
+    fi
+    echo "Data imported successfully."
+}
+
+# Function to view passenger details
+view_passenger() {
+    read -p "Enter name and surname: " NAME
+    grep -i "$NAME" passengers.csv || echo "Passenger not found."
+}
+
+# Function to update passenger details
+update_passenger() {
+    read -p "Enter passenger code or name/surname: " IDENTIFIER
+    if [[ -z "$IDENTIFIER" ]]; then
+        echo "Identifier cannot be empty."
+        return
+    fi
+    MATCHES=$(grep -in "$IDENTIFIER" passengers.csv)
+    if [[ -z "$MATCHES" ]]; then
+        echo "Passenger not found."
+        return
+    fi
+    if [[ $(echo "$MATCHES" | wc -l) -gt 1 ]]; then
+        echo "Multiple matches found. Please refine your search."
+        echo "$MATCHES"
+        return
+    fi
+    LINE=$(echo "$MATCHES" | head -n 1)
+    LINE_NUMBER=$(echo "$LINE" | cut -d: -f1)
+    CURRENT_RECORD=$(echo "$LINE" | cut -d: -f2-)
+    echo "Current details: $CURRENT_RECORD"
+    read -p "Enter field to update (fullname,age,country,status,rescued): " FIELD
+    case "$FIELD" in
+        fullname|age|country|status|rescued)
+            read -p "Enter new value: " NEW_VALUE
+            NEW_RECORD=$(echo "$CURRENT_RECORD" | awk -F',' -v field="$FIELD" -v val="$NEW_VALUE" 'BEGIN{OFS=","} {
+                if (field=="fullname") $2=val;
+                else if (field=="age") $3=val;
+                else if (field=="country") $4=val;
+                else if (field=="status") $5=val;
+                else if (field=="rescued") $6=val;
+                print
+            }')
+            sed -i "${LINE_NUMBER}s/.*/$NEW_RECORD/" passengers.csv
+            echo "Updated details: $NEW_RECORD"
+            ;;
+        *)
+            echo "Invalid field."
+            ;;
+    esac
+}
+
+# Function to display all records
+display_all() {
+    less passengers.csv
+}
+
+# Main script loop
+while true; do
+    display_menu
+    case "$CHOICE" in
+        1) import_data ;;
+        2) view_passenger ;;
+        3) update_passenger ;;
+        4) display_all ;;
+        5) echo "Exiting..."; exit 0 ;;
+        *) echo "Invalid choice. Try again." ;;
+    esac
+done
