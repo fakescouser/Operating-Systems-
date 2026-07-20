@@ -1,0 +1,44 @@
+process 2031 begins
+process 2031 ends
+process 2033 begins
+process 2033 ends
+process 2035 begins
+process 2035 ends
+process 2037 begins
+process 2037 ends
+process 2039 begins
+process 2039 ends
+PID 2031 - CMD: ../work/work7
+	Elapsed time = 5.62 secs
+	Execution time = 5.62 secs
+	Workload time = 5.62 secs
+PID 2033 - CMD: ../work/work6
+	Elapsed time = 10.42 secs
+	Execution time = 4.80 secs
+	Workload time = 10.42 secs
+PID 2035 - CMD: ../work/work5
+	Elapsed time = 14.40 secs
+	Execution time = 3.98 secs
+	Workload time = 14.40 secs
+PID 2037 - CMD: ../work/work4
+	Elapsed time = 17.58 secs
+	Execution time = 3.19 secs
+	Workload time = 17.58 secs
+PID 2039 - CMD: ../work/work3
+	Elapsed time = 19.98 secs
+	Execprocess 2041 begins
+process 2041 ends
+process 2043 begins
+process 2043 ends
+ution time = 2.39 secs
+	Workload time = 19.98 secs
+PID 2041 - CMD: ../work/work2
+	Elapsed time = 21.57 secs
+	Execution time = 1.59 secs
+	Workload time = 21.57 secs
+PID 2043 - CMD: ../work/work1
+	Elapsed time = 22.37 secs
+	Execution time = 0.80 secs
+	Workload time = 22.37 secs
+WORKLOAD TIME: 22.37 secs
+scheduler exits
